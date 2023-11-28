@@ -4,7 +4,10 @@
 const express = require('express');
 const morgan = require('morgan');
 
+
+//db connection
 const Sequelize = require ('sequelize');
+const {sequelize}=require('./models');
 
 
 // variable to enable global error logging
