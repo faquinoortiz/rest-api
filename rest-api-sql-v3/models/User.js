@@ -1,33 +1,72 @@
 'use strict';
 
+const { Model, DataTypes } = require('sequelize');
 
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config').development; 
-const Course = require ('./Course');
+module.exports = (sequelize) => {
+  class User extends Model {}
 
-const User = sequelize.define('User', {
-  firstName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  lastName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  emailAddress: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-    validate: {
-      isEmail: true,
+  User.init(
+    {
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'A first name is required',
+          },
+          notEmpty: {
+            msg: 'Please provide a first name',
+          },
+        },
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'A last name is required',
+          },
+          notEmpty: {
+            msg: 'Please provide a last name',
+          },
+        },
+      },
+      emailAddress: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
+          args: true,
+          msg: 'Email address already in use!',
+        },
+        validate: {
+          notNull: {
+            msg: 'An email address is required',
+          },
+          notEmpty: {
+            msg: 'Please provide an email address',
+    
+          },
+        },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'A password required',
+          },
+          len: {
+            args: [8, 20],
+            msg: 'The password should be between 8 and 20 characters in length',
+          },
+        },
+      },
     },
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
+    { sequelize }
+  );
 
-User.hasMany(Course,{foreignKey:'userId'})
+  User.hasMany(Course, { foreignKey: 'userId' });
 
+  return User;
+};
 module.exports = User;
