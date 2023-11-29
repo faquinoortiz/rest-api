@@ -2,6 +2,7 @@
 
 const { Model, DataTypes } = require('sequelize');
 
+
 module.exports = (sequelize) => {
   class User extends Model {}
 
@@ -44,7 +45,9 @@ module.exports = (sequelize) => {
           },
           notEmpty: {
             msg: 'Please provide an email address',
-    
+          },
+          isEmail: {
+            msg: 'Please provide a valid email address',
           },
         },
       },
@@ -55,18 +58,22 @@ module.exports = (sequelize) => {
           notNull: {
             msg: 'A password required',
           },
-          len: {
-            args: [8, 20],
-            msg: 'The password should be between 8 and 20 characters in length',
+          notEmpty: {
+            msg: 'Please provide a valid password',
           },
         },
       },
     },
     { sequelize }
   );
-
-  User.hasMany(Course, { foreignKey: 'userId' });
-
+User.associate = (models) =>{
+  User.hasMany(models.Course,{
+     as: 'user',
+     foreignKey: {
+        fieldName:'userId',
+        allowNull:false,
+     }
+  })
+}
   return User;
 };
-module.exports = User;

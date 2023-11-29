@@ -4,11 +4,9 @@
 const express = require('express');
 const morgan = require('morgan');
 
-
-//db connection
-const Sequelize = require ('sequelize');
-const {sequelize}=require('./models');
-
+// db connection
+const Sequelize = require('sequelize');
+const { sequelize } = require('./models');
 
 // variable to enable global error logging
 const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
@@ -17,20 +15,20 @@ const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'tr
 const app = express();
 
 // Test for database connection
-sequelize.authenticate()
-  .then(() => {
-    console.log('Connection to the database was established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database', error);
+  }
+})();
 
-
-// setup morgan which gives us http request logging
+// setup morgan which gives us HTTP request logging
 app.use(morgan('dev'));
 
 // setup a friendly greeting for the root route
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   res.json({
     message: 'Welcome to the REST API project!',
   });
