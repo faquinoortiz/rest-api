@@ -44,7 +44,9 @@ Course.associate = (models) =>{
     foreignKey:{
         fieldName:'userId'
     }
-  })
-}
+ })
+};
   return Course;
+
+
 };
