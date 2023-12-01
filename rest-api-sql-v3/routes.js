@@ -31,8 +31,6 @@ router.post('/users', asyncHandler(async (req, res) => {
   }
 }));
 
-// Courses Routes
-
 // GET route to return all courses including the User associated with each course
 router.get('/courses', authUser, asyncHandler(async (req, res) => {
   try {
