@@ -14,6 +14,10 @@ const app = express();
 
 app.use(express.json());
 
+// setup morgan which gives us HTTP request logging
+
+app.use(morgan('dev'));
+
 //set up routes
 app.use("/api",routes);
 
@@ -27,9 +31,6 @@ app.use("/api",routes);
     console.error('Unable to connect to the database', error);
   }
 })();
-
-// setup morgan which gives us HTTP request logging
-app.use(morgan('dev'));
 
 // setup a friendly greeting for the root route
 app.get('/', async (req, res) => {
