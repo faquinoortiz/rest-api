@@ -28,7 +28,7 @@ router.post('/users', asyncHandler(async (req, res) => {
     res.end();
   } catch (error) {
     if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
-      // Handle validation errors if needed
+ // Handle validation errors if needed
     } else {
       throw error;
     }
@@ -46,10 +46,10 @@ router.get('/courses', asyncHandler(async (req, res) => {
       },
     ],
   });
-  if (!courses) {
-    res.status(200).json(course);
-  } else {
+  if (!courses){
     res.status(404).json({ message: 'Courses not found' });
+  } else {
+    res.status(200).json(courses);
   }
 }));
 
@@ -75,7 +75,7 @@ router.get('/courses/:id', asyncHandler(async (req, res) => {
 router.post('/courses', authUser, asyncHandler(async (req, res) => {
   try {
     const course = await Course.create(req.body);
-    res.status(201).location(`/courses/${Course.id}`).end();
+    res.status(201).location(`/courses/${course.id}`).end();
   } catch (error) {
     if (error.name === 'SequelizeValidationError') {
       res.status(400).json({ error: errors.map((error) => error.message) });
