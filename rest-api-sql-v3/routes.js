@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const authUser = require('./middlewares/authUser');
+const authUser = require('./middleware/authUser');
 const { User, Course } = require('./models');
 
 function asyncHandler(cb) {
@@ -9,7 +9,7 @@ function asyncHandler(cb) {
     try {
       await cb(req, res, next);
     } catch (error) {
-      // Handle errors if needed
+      next(error)
     }
   };
 }
