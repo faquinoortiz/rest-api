@@ -23,12 +23,17 @@ router.get('/users', authUser, asyncHandler(async (req, res) => {
 // Create a new user
 router.post('/users', asyncHandler(async (req, res) => {
   try {
-    await User.create(req.body);
-    res.status(201).location('/');
-    res.end();
+    let user = req.body
+    if(user.password){
+      user.password = bcrypt.hashSync(user.password,8-20)
+    }
+    await user.create(user);
+    res.status(201).location('/').end();
   } catch (error) {
     if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
- // Handle validation errors if needed
+      const errors= { error: errors.map((error) => error.message) }
+      res.status(400).json({errors});
+ 
     } else {
       throw error;
     }
