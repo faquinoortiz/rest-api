@@ -23,16 +23,16 @@ router.get('/users', authUser, asyncHandler(async (req, res) => {
 // Create a new user
 router.post('/users', asyncHandler(async (req, res) => {
   try {
-    let user = req.body
-    if(user.password){
-      user.password = bcrypt.hashSync(user.password,8-20)
+    let User = req.body
+    if(User.password){
+      User.password = bcrypt.hashSync(User.password,8-20)
     }
-    await user.create(user);
+    await User.create(User);
     res.status(201).location('/').end();
   } catch (error) {
     if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
       const errors= { error: errors.map((error) => error.message) }
-      res.status(400).json({errors});
+      res.status(400).json({ errors: error.errors.map((error) => error.message) });
  
     } else {
       throw error;
@@ -83,7 +83,7 @@ router.post('/courses', authUser, asyncHandler(async (req, res) => {
     res.status(201).location(`/courses/${course.id}`).end();
   } catch (error) {
     if (error.name === 'SequelizeValidationError') {
-      res.status(400).json({ error: errors.map((error) => error.message) });
+      res.status(400).json({ errors: error.errors.map((error) => error.message) });
     } else {
       throw error;
     }
