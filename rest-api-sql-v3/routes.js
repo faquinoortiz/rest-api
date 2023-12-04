@@ -27,7 +27,7 @@ router.post('/users', asyncHandler(async (req, res) => {
     if(user.password){
       user.password = bcrypt.hashSync(user.password,8-20)
     }
-    await User.create(User);
+    await User.create(user);
     res.status(201).location('/').end();
   } catch (error) {
     if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
@@ -98,7 +98,12 @@ router.put('/courses/:id', authUser, asyncHandler(async (req, res) => {
     const course = await Course.update(req.body, { where: { id: courseId } });
     res.status(204).end();
   } catch (error) {
-    res.status(400).json({ message: 'Bad Request', errors: error.errors });
+    if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+      const errors= { errors: error.errors.map((error) => error.message) }
+      res.status(400).json({ errors});
+    } else {
+      throw error;
+    }
   }
 }));
 
